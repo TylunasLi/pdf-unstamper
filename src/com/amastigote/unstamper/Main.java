@@ -10,10 +10,10 @@ package com.amastigote.unstamper;
 import com.amastigote.unstamper.log.GeneralLogger;
 import com.amastigote.unstamper.util.OptionManager;
 import com.amastigote.unstamper.util.TaskRunner;
-import com.sun.istack.internal.NotNull;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
+import org.jetbrains.annotations.NotNull;
 
 public class Main {
 

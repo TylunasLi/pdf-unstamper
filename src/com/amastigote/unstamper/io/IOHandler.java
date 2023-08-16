@@ -7,8 +7,8 @@
  */
 package com.amastigote.unstamper.io;
 
-import com.sun.istack.internal.NotNull;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
