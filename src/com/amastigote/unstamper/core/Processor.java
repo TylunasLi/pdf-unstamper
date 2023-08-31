@@ -10,6 +10,7 @@ package com.amastigote.unstamper.core;
 import com.amastigote.unstamper.log.GeneralLogger;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.cos.COSArray;
+import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.pdfparser.PDFStreamParser;
@@ -130,7 +131,7 @@ public class Processor {
 
                         if (object instanceof Operator) {
                             Operator op = (Operator) object;
-                            String testStr;
+                            byte[] testStr = new byte[0];
                             boolean isArray = false;
 
                             if (SHOW_TEXT.equals(op.getName()) || (SHOW_TEXT_ADJUSTED.equals(op.getName()))) {
@@ -142,23 +143,18 @@ public class Processor {
                                 if (prevObject instanceof COSArray) {
                                     isArray = true;
                                     COSArray array = (COSArray) prevObject;
-                                    StringBuilder builder = new StringBuilder();
-
-                                    for (int j = 0; j < array.size(); j++) {
-                                        if (Objects.isNull(array.getString(j))) {
-                                            continue;
-                                        }
-                                        builder.append(array.getString(j));
+                                    for (COSBase obj : array)
+                                    {
+                                        testStr = ((COSString)obj).getBytes();
                                     }
-                                    testStr = builder.toString();
                                 } else if (prevObject instanceof COSString) {
-                                    testStr = ((COSString) prevObject).toString();
+                                    testStr = ((COSString) prevObject).getBytes();
                                 } else {
                                     continue;
                                 }
 
                                 try {
-                                    if (TextStampRecognizer.recognize(strings, testStr.getBytes(), pdFonts, useStrict)) {
+                                    if (TextStampRecognizer.recognize(strings, testStr, pdFonts, useStrict)) {
                                         if (isArray) {
                                             ((COSArray) prevObject).clear();
                                         } else {

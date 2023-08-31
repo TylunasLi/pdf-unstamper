@@ -13,6 +13,8 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType3Font;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,7 +25,6 @@ class TextStampRecognizer {
             @NotNull byte[] inputText,
             @NotNull Set<PDFont> pdFonts,
             @NotNull boolean useStrict) {
-        final String encodedInput = generateByteString(inputText);
         for (PDFont f : pdFonts) {
             if (Objects.isNull(f)) {
                 continue;
@@ -35,15 +36,20 @@ class TextStampRecognizer {
                 continue;
             }
 
+            StringBuilder builder = new StringBuilder();
+            InputStream in = new ByteArrayInputStream(inputText);
+            try {
+                while (in.available() > 0) {
+                    // decode a character
+                    int code = f.readCode(in);
+                    builder.append(f.toUnicode(code));
+                }
+            } catch (Exception ignored) {
+                builder = new StringBuilder(generateByteString(inputText));
+            }
             for (String k : keywords) {
-                try {
-                    final byte[] encodedKeywordBytes = f.encode(k);
-                    final String encodedKeyword = generateByteString(encodedKeywordBytes);
-
-                    if (checkDuplicate(encodedInput, encodedKeyword, useStrict)) {
-                        return true;
-                    }
-                } catch (Exception ignored) {
+                if (checkDuplicate(builder.toString(), k, useStrict)) {
+                    return true;
                 }
             }
         }

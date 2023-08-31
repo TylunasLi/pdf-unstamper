@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <properties>
-        <_version>0.2.5</_version>
+        <_version>0.2.6</_version>
     </properties>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.amastigote</groupId>
@@ -22,6 +22,17 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.amastigote.unstamper.Main</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
