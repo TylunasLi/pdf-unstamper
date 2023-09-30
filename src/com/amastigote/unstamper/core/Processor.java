@@ -140,21 +140,26 @@ public class Processor {
                                 }
 
                                 prevObject = objects.get(i - 1);
+                                boolean matched = false;
                                 if (prevObject instanceof COSArray) {
                                     isArray = true;
                                     COSArray array = (COSArray) prevObject;
                                     for (COSBase obj : array)
                                     {
-                                        testStr = ((COSString)obj).getBytes();
+                                        if (obj instanceof COSString) {
+                                            testStr = ((COSString)obj).getBytes();
+                                            matched = matched || TextStampRecognizer.recognize(strings, testStr, pdFonts, useStrict);
+                                        }
                                     }
                                 } else if (prevObject instanceof COSString) {
                                     testStr = ((COSString) prevObject).getBytes();
+                                    matched = TextStampRecognizer.recognize(strings, testStr, pdFonts, useStrict);
                                 } else {
                                     continue;
                                 }
 
                                 try {
-                                    if (TextStampRecognizer.recognize(strings, testStr, pdFonts, useStrict)) {
+                                    if (matched) {
                                         if (isArray) {
                                             ((COSArray) prevObject).clear();
                                         } else {

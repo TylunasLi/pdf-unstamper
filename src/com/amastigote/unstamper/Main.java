@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Main {
 
-    public static final String _version = "0.2.5";
+    public static final String _version = "0.2.6";
 
     static {
         /* Disable Logging in Apache PDFBox */

@@ -42,7 +42,8 @@ class TextStampRecognizer {
                 while (in.available() > 0) {
                     // decode a character
                     int code = f.readCode(in);
-                    builder.append(f.toUnicode(code));
+                    String unicode = f.toUnicode(code);
+                    builder.append(unicode == null ? "" : unicode);
                 }
             } catch (Exception ignored) {
                 builder = new StringBuilder(generateByteString(inputText));
